@@ -68,24 +68,24 @@ def get_symbol(symbol, num_classes, is_train=True):
     return net
 
 
-def fit(symbol, train, val, batch_size, num_gpus, begin_epoch, num_epoch, params):
-    devs = [mx.gpu(i) for i in range(num_gpus)]
-    mod = mx.mod.Module(symbol=symbol, context=devs)
-    mod.fit(train, val,
-        arg_params=None,
-        aux_params=None,
-        allow_missing=True,
-        batch_end_callback = mx.callback.Speedometer(batch_size, 10),
-        kvstore='device',
-        optimizer='sgd',
-        begin_epoch=begin_epoch,
-        num_epoch=num_epoch,
-        optimizer_params={'learning_rate':0.05},
-        initializer=mx.init.Load(params, mx.init.Xavier(), verbose=True),
-        # initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
-        eval_metric='acc')
-    metric = mx.metric.Accuracy()
-    return mod.score(val, metric)
+# def fit(symbol, train, val, batch_size, num_gpus, begin_epoch, num_epoch, params):
+#     devs = [mx.gpu(i) for i in range(num_gpus)]
+#     mod = mx.mod.Module(symbol=symbol, context=devs)
+#     mod.fit(train, val,
+#         arg_params=None,
+#         aux_params=None,
+#         allow_missing=True,
+#         batch_end_callback = mx.callback.Speedometer(batch_size, 10),
+#         kvstore='device',
+#         optimizer='sgd',
+#         begin_epoch=begin_epoch,
+#         num_epoch=num_epoch,
+#         optimizer_params={'learning_rate':0.05},
+#         initializer=mx.init.Load(params, mx.init.Xavier(), verbose=True),
+#         # initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
+#         eval_metric='acc')
+#     metric = mx.metric.Accuracy()
+#     return mod.score(val, metric)
 
 
 def main():
@@ -104,7 +104,24 @@ def main():
     new_sym = get_symbol(symbol, num_classes, is_train=False)
 
     train_iter, val_iter = get_iterators(train_rec, val_rec, batch_size)
-    fit(new_sym, train_iter, val_iter, batch_size, num_gpus, begin_epoch, num_epoch, params)
+
+    # fit(new_sym, train_iter, val_iter, batch_size, num_gpus, begin_epoch, num_epoch, params)
+
+    devs = [mx.gpu(i) for i in range(num_gpus)]
+    mod = mx.mod.Module(symbol=new_sym, context=devs)
+    mod.fit(train_iter, val_iter,
+        arg_params=None,
+        aux_params=None,
+        allow_missing=True,
+        batch_end_callback = mx.callback.Speedometer(batch_size, 10),
+        kvstore='device',
+        optimizer='sgd',
+        begin_epoch=begin_epoch,
+        num_epoch=num_epoch,
+        optimizer_params={'learning_rate':0.05},
+        initializer=mx.init.Load(params, mx.init.Xavier(), verbose=True),
+        # initializer=mx.init.Xavier(rnd_type='gaussian', factor_type="in", magnitude=2),
+        eval_metric='acc')
 
 
 if __name__ == '__main__':
