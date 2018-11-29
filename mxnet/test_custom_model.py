@@ -105,7 +105,7 @@ def main():
     new_sym = get_symbol(symbol, num_classes, is_train=False)
 
     train_iter, val_iter = get_iterators(train_rec, val_rec, batch_size)
-    mod_score = fit(new_sym, train_iter, val_iter, batch_size, num_gpus, begin_epoch, num_epoch, params)
+    fit(new_sym, train_iter, val_iter, batch_size, num_gpus, begin_epoch, num_epoch, params)
 
 
 if __name__ == '__main__':
