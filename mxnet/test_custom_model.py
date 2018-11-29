@@ -59,7 +59,7 @@ def get_symbol(symbol, num_classes, is_train=True):
     print(list(zip(d, out)))
 
     relu = internals['relu5_3_output']
-    pool = mx.symbol.Pooling(data=relu, pool_type='max', kernel=(5,5), stride=(5,5), name='pool')
+    pool = mx.symbol.Pooling(data=relu, pool_type='max', kernel=(13,13), stride=(13,13), name='pool')
     flat = mx.symbol.Flatten(data=pool)
     fc1 = mx.symbol.FullyConnected(data=flat, num_hidden=num_classes, name='fc1')
     fc2 = mx.symbol.FullyConnected(data=fc1, num_hidden=num_classes, name='fc2')
