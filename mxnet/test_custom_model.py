@@ -23,6 +23,7 @@ def parse_args():
     parser.add_argument('--batch_size', type=int)
     parser.add_argument('--train_rec', type=str)
     parser.add_argument('--val_rec', type=str)
+    parser.add_argument('--model', type=str)
 
     return parser.parse_args()
 
@@ -99,6 +100,7 @@ def main():
     params = args.params
     begin_epoch = args.begin_epoch
     num_epoch = args.num_epoch
+    model = args.model
 
 
     new_sym = get_symbol(symbol, num_classes, is_train=False)
@@ -114,6 +116,7 @@ def main():
         aux_params=None,
         allow_missing=True,
         batch_end_callback = mx.callback.Speedometer(batch_size, 10),
+        epoch_end_callback= mx.callback.do_checkpoint(model),
         kvstore='device',
         optimizer='sgd',
         begin_epoch=begin_epoch,
