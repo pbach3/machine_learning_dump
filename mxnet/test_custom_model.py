@@ -16,8 +16,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('--symbol', type=str)
     parser.add_argument('--params', type=str)
-    parser.add_argument('--begin_epoch', type=int)
-    parser.add_argument('--num_epoch', type=int)
+    parser.add_argument('--start_epoch', type=int)
+    parser.add_argument('--epoch_count', type=int)
     parser.add_argument('--num_classes', type=int)
     parser.add_argument('--num_gpus', type=int, default=1)
     parser.add_argument('--batch_size', type=int)
@@ -72,7 +72,6 @@ def fit(symbol, train, val, batch_size, num_gpus, begin_epoch, num_epoch, params
     devs = [mx.gpu(i) for i in range(num_gpus)]
     mod = mx.mod.Module(symbol=symbol, context=devs)
     mod.fit(train, val,
-        num_epoch=30,
         arg_params=None,
         aux_params=None,
         allow_missing=True,
